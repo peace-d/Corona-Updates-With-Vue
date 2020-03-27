@@ -1,5 +1,13 @@
 <template>
 <div class="corona-results-card mt-5">
+    <div class="row">
+        <div class="col-sm-12">
+            <p class="text-left"><strong>Last update: </strong>
+                <small id="filterHelp" class="form-text text-muted" v-show="isLoading">Loading...</small>
+                {{statistic_taken_at}}<a href="#" @click="refreshData()"><b-icon icon="arrow-counterclockwise"></b-icon></a>
+            </p>
+        </div>
+    </div>
     <div class="row" v-if="showFilter">
         <div class="col-sm-12">
               <div class="form-group">
@@ -10,7 +18,6 @@
                         <button class="btn btn-outline-secondary" type="button" id="button-addon1">Filter</button>
                     </div>
                 </div>
-                <small id="filterHelp" class="form-text text-muted" v-if="isLoading">Loading...</small>
             </div>
         </div>
     </div>
@@ -39,18 +46,19 @@
 
 <script>
 import axios from 'axios'
+// import func from '../../vue-temp/vue-editor-bridge'
 export default {
   name: 'CoronaResultsCard',
   data: function () {
     return {
       isLoading: false,
-      results: {}
+      results: {},
+      statistic_taken_at: ''
     }
   },
   props: ['showFilter'],
   methods: {
     getWorldCoronaData: function () {
-      this.isLoading = true
       axios.get('https://coronavirus-monitor.p.rapidapi.com/coronavirus/cases_by_country.php', {
         headers: {
           'x-rapidapi-host': 'coronavirus-monitor.p.rapidapi.com',
@@ -59,14 +67,27 @@ export default {
       })
         .then(response => {
           this.results = response.data.countries_stat
+          this.statistic_taken_at = response.data.statistic_taken_at
         })
         .catch(e => {
           this.errors.push(e)
         })
-      this.isLoading = false
+    },
+    refreshData: function () {
+      this.isLoading = true
+      // simulate AJAX
+      setTimeout(() => {
+        this.isLoading = false
+      }, 5000)
+      this.getWorldCoronaData()
     }
   },
-  beforeMount () {
+  mounted () {
+    this.isLoading = true
+    // simulate AJAX
+    setTimeout(() => {
+      this.isLoading = false
+    }, 600)
     this.getWorldCoronaData()
   }
 }
