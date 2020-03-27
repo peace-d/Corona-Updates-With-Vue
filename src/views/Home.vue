@@ -1,18 +1,34 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class='home'>
+    <h2>Corona Updates</h2>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="alert alert-info text-left" v-if="isLoading">Loading...</div>
+        </div>
+      </div>
+      <div class="row">
+        <corona-results-card></corona-results-card>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import CoronaResultsCard from '@/components/CoronaResultsCard'
 
 export default {
   name: 'Home',
+  data: function () {
+    return {
+      isLoading: false,
+      data: []
+    }
+  },
   components: {
-    HelloWorld
+    CoronaResultsCard
+  },
+  methods: {
   }
 }
 </script>
